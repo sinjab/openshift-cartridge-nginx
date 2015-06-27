@@ -39,10 +39,7 @@ http {
     default_type application/octet-stream;
 
     client_body_temp_path  <%= ENV['OPENSHIFT_TMP_DIR'] %>/client_temp;
-    proxy_temp_path        <%= ENV['OPENSHIFT_TMP_DIR'] %>/proxy_temp;
     fastcgi_temp_path      <%= ENV['OPENSHIFT_TMP_DIR'] %>/fastcgi_temp;
-    uwsgi_temp_path        <%= ENV['OPENSHIFT_TMP_DIR'] %>/uwsgi_temp;
-    scgi_temp_path         <%= ENV['OPENSHIFT_TMP_DIR'] %>/scgi_temp;
 
     # Format for our log files
     log_format   main '$remote_addr - $remote_user [$time_local]  $status '
