@@ -4,14 +4,20 @@ set -e
 case "$1" in
   -v|--version)
     version="$2"
+    ;;
+  -t|--type)
+    type="$3"
 esac
 
 # Resolve version
 NGINX_VERSION=1.8.0
-if [ ! -z "${OPENSHIFT_NGINX_VERSION}" ] && [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}/" ]; then
+NGINX_TYPE=fastcgi
+if [ ! -z "${OPENSHIFT_NGINX_VERSION}" ] && [ ! -z "${OPENSHIFT_NGINX_TYPE}" ] && [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx_${NGINX_TYPE}-${OPENSHIFT_NGINX_VERSION}/" ]; then
     NGINX_VERSION="${OPENSHIFT_NGINX_VERSION}"
-elif [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
+    NGINX_TYPE="${OPENSHIFT_NGINX_TYPE}"
+elif [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx_${type}-${version}/" ]; then
     NGINX_VERSION="${version}"
+    NGINX_TYPE="${type}"
 fi
 
 # Create dirs
@@ -22,6 +28,8 @@ done
 
 # Set version env variable
 export OPENSHIFT_NGINX_VERSION=${NGINX_VERSION}
+export OPENSHIFT_NGINX_TYPE=${NGINX_TYPE}
 
 echo "${NGINX_VERSION}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_VERSION
-echo "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_VERSION_DIR
+echo "${NGINX_TYPE}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_TYPE
+echo "${OPENSHIFT_NGINX_DIR}/usr/nginx_${NGINX_TYPE}-${OPENSHIFT_NGINX_VERSION}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_VERSION_DIR
